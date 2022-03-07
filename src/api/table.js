@@ -8,6 +8,22 @@ export function fetchList(query) {
     })
 }
 
+export function getBackupProgress(query) {
+    return request({
+        url: '/web/database/backup',
+        method: 'get',
+        params: query
+    })
+}
+
+export function backupTable(data) {
+    return request({
+        url: '/web/database/backup',
+        method: 'post',
+        data
+    })
+}
+
 export function optimizeTable(data) {
     return request({
         url: '/web/database/optimize-table',

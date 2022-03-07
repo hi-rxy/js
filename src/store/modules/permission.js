@@ -1,6 +1,6 @@
 import { fetchRoleMenuList } from '@/api/menu'
 import { asyncRoutes, constantRoutes,map } from '@/router'
-import exportDefaultRouter from "@/router/export-modules-router";//本地开发
+// import exportDefaultRouter from "@/router/export-modules-router";//本地开发
 
 // 将本地routerMap映射到ajax获取到的serverRouterMap;
 function generateAsyncRouter(routerMap, serverRouterMap) {
@@ -66,7 +66,8 @@ const actions = {
             let roles = res['roles']
             fetchRoleMenuList({roles:roles}).then(response => {
                 console.log('【./src/store/modules/permission.js】4、根据角色从后端拉取对应菜单：',response.data)
-                let routers = generateAsyncRouter(map, response.data)
+                let serverRouters = generateAsyncRouter(map, response.data)
+                let routers = serverRouters.concat(asyncRoutes)
                 if (roles.includes('administrator')) {
                     console.log('【./src/store/modules/permission.js】5、当前用户是超级管理员角色，拥有全部权限：',routers)
                     accessedRoutes = routers || []

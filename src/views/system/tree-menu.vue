@@ -23,11 +23,6 @@
                         >
                             增加
                         </el-button>
-<!--                        <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary"-->
-<!--                                   icon="el-icon-download" @click="handleDownload"-->
-<!--                        >-->
-<!--                            导出-->
-<!--                        </el-button>-->
                     </div>
                     <!--  搜索结束  -->
 
@@ -52,13 +47,6 @@
                             type="selection"
                             width="40">
                         </el-table-column>
-<!--                        <el-table-column label="编号" prop="id" sortable="custom" align="center" width="80"-->
-<!--                                         :class-name="getSortClass('id')"-->
-<!--                        >-->
-<!--                            <template slot-scope="{row}">-->
-<!--                                <span>{{ row.id }}</span>-->
-<!--                            </template>-->
-<!--                        </el-table-column>-->
                         <el-table-column label="菜单" align="center" width="180">
                             <template slot-scope="{row}">
                                 <span>{{ row.menu_name }}</span>
@@ -72,9 +60,9 @@
                                 <!--<el-input v-model="form.sort" @change="handleCurrentChange(row)" />-->
                             </template>
                         </el-table-column>
-                        <el-table-column label="图标" align="center" show-overflow-tooltip>
+                        <el-table-column label="图标" align="center" width="80">
                             <template slot-scope="{row}">
-                                <span>{{ row.icons }}</span>
+                                <span><svg-icon :icon-class="row.icons" class-name="card-panel-icon"/></span>
                             </template>
                         </el-table-column>
                         <el-table-column label="地址" align="center" show-overflow-tooltip>
@@ -82,16 +70,37 @@
                                 <span>{{ row.url }}</span>
                             </template>
                         </el-table-column>
-<!--                        <el-table-column show-overflow-tooltip label="创建时间" width="180" align="center" sortable="custom" prop="created_at" :class-name="getSortClass('created_at')">-->
-<!--                            <template slot-scope="{row}">-->
-<!--                                <span>{{ row.created_at }}</span>-->
-<!--                            </template>-->
-<!--                        </el-table-column>-->
-<!--                        <el-table-column show-overflow-tooltip label="修改时间" width="180" align="center" sortable="custom" prop="updated_at" :class-name="getSortClass('updated_at')">-->
-<!--                            <template slot-scope="{row}">-->
-<!--                                <span>{{ row.updated_at }}</span>-->
-<!--                            </template>-->
-<!--                        </el-table-column>-->
+                        <el-table-column label="路由名称" align="center" show-overflow-tooltip>
+                            <template slot-scope="{row}">
+                                <span>{{ row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="路径" align="center" show-overflow-tooltip>
+                            <template slot-scope="{row}">
+                                <span>{{ row.path }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="缓存" align="center" show-overflow-tooltip>
+                            <template slot-scope="{row}">
+                                <el-tag :type="row.no_cache | boolFilter">
+                                    {{ row.no_cache }}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="面包屑" align="center" show-overflow-tooltip>
+                            <template slot-scope="{row}">
+                                <el-tag :type="row.breadcrumb | boolFilter">
+                                    {{ row.breadcrumb }}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="固定" align="center" show-overflow-tooltip>
+                            <template slot-scope="{row}">
+                                <el-tag :type="row.affix | boolFilter">
+                                    {{ row.affix }}
+                                </el-tag>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="状态" align="center" width="100" class-name="status-col">
                             <template slot-scope="{row}">
                                 <el-tag :type="row.status | statusFilter">
@@ -126,56 +135,76 @@
                         <!--  操作结束   -->
                     </el-table>
                     <!--  表格结束  -->
-
-                    <!--  分页开始  -->
-<!--                    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page"-->
-<!--                                :limit.sync="listQuery.limit" @pagination="getList"-->
-<!--                    />-->
-                    <!--  分页结束  -->
                 </el-card>
             </el-col>
         </el-row>
         <!-- form 表单 -->
         <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
             <el-form ref="dataForm" :rules="rules" :model="form" label-position="right" label-width="70px"
-                     style="width: 400px; margin-left:50px;"
             >
-                <el-form-item label="上级" prop="pid">
-                    <el-cascader
-                        :options="trees"
-                        v-model="form.pid"
-                        :props="{
-              checkStrictly: true,
-              emitPath: false,
-              label: 'menu_name',
-              value: 'id',
-              children: 'children'
-            }"
-                        :show-all-levels="false"
-                        placeholder="父级菜单"
-                        collapse-tags
-                        clearable
-                        @change="changeParent"
-                        clearable
-                    ></el-cascader>
-                </el-form-item>
-                <el-form-item label="名称" prop="menu_name">
-                    <el-input v-model="form.menu_name"/>
-                </el-form-item>
-                <el-form-item label="图标" prop="icons">
-                    <el-input v-model="form.icons"/>
-                </el-form-item>
-                <el-form-item label="地址" prop="url">
-                    <el-input v-model="form.url"/>
-                </el-form-item>
-                <el-form-item label="状态" prop="status">
-                    <el-select v-model="form.status" class="filter-item" placeholder="Please select">
-                        <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item"/>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="排序" prop="sort">
-                    <el-input v-model="form.sort"/>
-                </el-form-item>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="上级" prop="pid">
+                            <el-cascader
+                                :options="trees"
+                                v-model="form.pid"
+                                :props="{
+                      checkStrictly: true,
+                      emitPath: false,
+                      label: 'menu_name',
+                      value: 'id',
+                      children: 'children'
+                    }"
+                                :show-all-levels="false"
+                                placeholder="父级菜单"
+                                collapse-tags
+                                clearable
+                                @change="changeParent"
+                                clearable
+                            ></el-cascader>
+                        </el-form-item>
+                        <el-form-item label="名称" prop="menu_name">
+                            <el-input v-model="form.menu_name"/>
+                        </el-form-item>
+                        <el-form-item label="图标" prop="icons">
+                            <el-input v-model="form.icons"/>
+                        </el-form-item>
+                        <el-form-item label="地址" prop="url">
+                            <el-input v-model="form.url"/>
+                        </el-form-item>
+                        <el-form-item label="状态" prop="status">
+                            <el-select v-model="form.status" class="filter-item" placeholder="Please select">
+                                <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item"/>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="排序" prop="sort">
+                            <el-input v-model="form.sort"/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="路由名称" prop="name">
+                            <el-input v-model="form.name"/>
+                        </el-form-item>
+                        <el-form-item label="路径" prop="path">
+                            <el-input v-model="form.path"/>
+                        </el-form-item>
+                        <el-form-item label="缓存" prop="no_cache">
+                            <el-select v-model="form.no_cache" class="filter-item" placeholder="Please select">
+                                <el-option v-for="item in boolOptions" :key="item" :label="item" :value="item"/>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="面包屑" prop="breadcrumb">
+                            <el-select v-model="form.breadcrumb" class="filter-item" placeholder="Please select">
+                                <el-option v-for="item in boolOptions" :key="item" :label="item" :value="item"/>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="固定" prop="affix">
+                            <el-select v-model="form.affix" class="filter-item" placeholder="Please select">
+                                <el-option v-for="item in boolOptions" :key="item" :label="item" :value="item"/>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">
@@ -191,7 +220,7 @@
 </template>
 
 <script>
-import { fetchList, fetchTreeList, createMenu, updateMenu, deleteMenu, menuState } from '@/api/menu'
+import { fetchTreeList, createMenu, updateMenu, deleteMenu, menuState } from '@/api/menu'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -206,6 +235,13 @@ export default {
                 disable: 'danger'
             }
             return statusMap[status]
+        },
+        boolFilter(value) {
+            const statusMap = {
+                show: 'success',
+                hidden: 'danger'
+            }
+            return statusMap[value]
         }
     },
     data() {
@@ -227,7 +263,12 @@ export default {
                 sort: 1,
                 pid: 0,
                 status: 'enable',
-                text: ''
+                text: '',
+                name:'',
+                path:'',
+                no_cache:'hidden',
+                breadcrumb:'show',
+                affix:'hidden',
             },
             // 分页数据
             list: [],
@@ -239,6 +280,8 @@ export default {
             filterText: '',
             // 状态值
             statusOptions: ['enable', 'disable'],
+            // 状态值
+            boolOptions: ['show', 'hidden'],
             // 表单按钮
             textMap: {
                 update: '编辑',
@@ -331,7 +374,12 @@ export default {
                 sort: 1,
                 pid: 0,
                 status: 'enable',
-                text: ''
+                text: '',
+                name:'',
+                path:'',
+                no_cache:'hidden',
+                breadcrumb:'show',
+                affix:'hidden',
             }
         },
         handleModifyStatus(row, status) {

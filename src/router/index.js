@@ -41,8 +41,9 @@ export const map = {
     'admin': () => import('@/views/system/admin'),
     'role': () => import('@/views/system/role'),
     'permission': () => import('@/views/system/permission'),
-    'config-group': () => import('@/views/system/config-group'),
-    'configs': () => import('@/views/system/configs')
+    'config-group': () => import('@/views/configs/config-group'),
+    'configs': () => import('@/views/configs/configs'),
+    'table': () => import('@/views/tables/table'),
 }
 
 /**

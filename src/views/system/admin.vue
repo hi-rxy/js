@@ -58,7 +58,7 @@
                                 <span>{{ row.username }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="邮箱" width="180" align="center">
+                        <el-table-column show-overflow-tooltip label="邮箱" align="center">
                             <template slot-scope="{row}">
                                 <span>{{ row.email }}</span>
                             </template>
@@ -68,7 +68,7 @@
                                 <img :src="row.face" width="40"/>
                             </template>
                         </el-table-column>
-                        <el-table-column label="角色" align="center">
+                        <el-table-column show-overflow-tooltip label="角色" align="center">
                             <template slot-scope="{row}">
                                 <span>{{ row.role }}</span>
                             </template>
@@ -80,12 +80,12 @@
                                 </el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip label="创建时间" width="180" align="center" sortable="custom" prop="created_at" :class-name="getSortClass('created_at')">
+                        <el-table-column show-overflow-tooltip label="创建时间" align="center" sortable="custom" prop="created_at" :class-name="getSortClass('created_at')">
                             <template slot-scope="{row}">
                                 <span>{{ row.created_at }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip label="上次登录时间" width="180" align="center" sortable="custom" prop="last_time" :class-name="getSortClass('last_time')">
+                        <el-table-column show-overflow-tooltip label="登录时间" align="center" sortable="custom" prop="last_time" :class-name="getSortClass('last_time')">
                             <template slot-scope="{row}">
                                 <span>{{ row.last_time }}</span>
                             </template>

@@ -18,6 +18,11 @@
                         >
                             清除
                         </el-button>
+                        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                                   @click="handleBackup"
+                        >
+                            备份
+                        </el-button>
                     </div>
                     <!--  搜索结束  -->
 
@@ -35,6 +40,7 @@
                         style="width: 100%;"
                         max-height="750"
                         @sort-change="sortChange"
+                        @selection-change="handleSelectionChange"
                     >
                         <!--  字段开始    -->
                         <el-table-column
@@ -122,7 +128,6 @@
 import { fetchList,optimizeTable,repairTable } from '@/api/table'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination'
-import { deleteAdmin } from '@/api/admin' // secondary package based on el-pagination
 
 export default {
     name: 'Table',
@@ -190,6 +195,13 @@ export default {
             // 排序
             const sort = this.listQuery.sort
             return sort === `+${key}` ? 'ascending' : 'descending'
+        },
+        handleBackup () {
+
+        },
+        handleSelectionChange(val) {
+            console.log(val)
+            this.multipleSelection = val;
         },
         handleOptimize (row) {
             // 优化

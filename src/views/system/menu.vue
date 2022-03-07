@@ -73,7 +73,7 @@
                         show-header
                         highlight-current-row
                         style="width: 100%;"
-                        max-height="750"
+                        max-height="60%"
                         @sort-change="sortChange"
                     >
                         <!--  字段开始    -->
